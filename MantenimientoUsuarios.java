@@ -3,13 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package proyecto1;
-
+import java.util.ArrayList;
 /**
  *
  * @author 82R4006DGJ
  */
 public class MantenimientoUsuarios extends javax.swing.JFrame {
-    
+    ArrayList<Usuario> listaUsuarios = new ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MantenimientoUsuarios.class.getName());
 
     /**
@@ -45,15 +45,16 @@ public class MantenimientoUsuarios extends javax.swing.JFrame {
         jPasswordField1.setText("jPasswordField1");
 
         jButton1.setText("ADD");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("MODIFY");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton3.setText("INACTIVATE");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
-        jLabel1.setBackground(new java.awt.Color(204, 204, 255));
         jLabel1.setText("USERNAME");
 
-        jLabel2.setBackground(new java.awt.Color(153, 204, 255));
         jLabel2.setText("PASSWORD");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -120,6 +121,62 @@ public class MantenimientoUsuarios extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String user = jTextField1.getText();
+String pass = new String(jPasswordField1.getPassword());
+
+if(user.isEmpty() || pass.isEmpty()){
+    javax.swing.JOptionPane.showMessageDialog(this, "Campos vacíos");
+    return;
+}
+
+listaUsuarios.add(new Usuario(user, pass));
+javax.swing.JOptionPane.showMessageDialog(this, "Usuario agregado");
+actualizarTabla();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int fila = jTable1.getSelectedRow();
+
+if(fila == -1){
+    javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un usuario");
+    return;
+}
+
+String user = jTextField1.getText();
+String pass = new String(jPasswordField1.getPassword());
+
+listaUsuarios.get(fila).username = user;
+listaUsuarios.get(fila).password = pass;
+
+actualizarTabla();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int fila = jTable1.getSelectedRow();
+
+if(fila == -1){
+    javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un usuario");
+    return;
+}
+
+listaUsuarios.get(fila).activo = false;
+actualizarTabla();
+    }//GEN-LAST:event_jButton3ActionPerformed
+private void actualizarTabla(){
+    javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
+    model.addColumn("Usuario");
+    model.addColumn("Estado");
+
+    for(Usuario u : listaUsuarios){
+        model.addRow(new Object[]{
+            u.username,
+            u.activo ? "Activo" : "Inactivo"
+        });
+    }
+
+    jTable1.setModel(model);
+}
     /**
      * @param args the command line arguments
      */
